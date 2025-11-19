@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>👑 Torneo LoL - Temporada Nueva</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3a8a 0%, #7c3aed 50%, #312e81 100%);
+            min-height: 100vh;
+            padding: 2rem;
+            color: white;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .header p {
+            color: #bfdbfe;
+            font-size: 1.2rem;
+        }
+
+        .info-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .info-card-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            opacity: 0.9;
+        }
+
+        .info-card-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .leader-card {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(249, 115, 22, 0.2));
+            backdrop-filter: blur(10px);
+            border: 2px solid #fbbf24;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .leader-info {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .leader-trophy {
+            font-size: 4rem;
+        }
+
+        .leader-name {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+        }
+
+        .leader-total {
+            text-align: right;
+        }
+
+        .leader-total-label {
+            color: #fcd34d;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .leader-total-value {
+            font-size: 3rem;
+            font-weight: bold;
+        }
+
+        .table-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        th {
+            padding: 1rem;
+            text-align: left;
+            color: #fcd34d;
+            font-weight: bold;
+        }
+
+        th.center, td.center {
+            text-align: center;
+        }
+
+        tbody tr {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            transition: background 0.2s;
+        }
+
+        tbody tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        td {
+            padding: 1rem;
+        }
+
+        .position {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .lp-cell {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            cursor: pointer;
+            padding: 0.3rem 0.5rem;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .lp-cell:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .lp-positive {
+            color: #4ade80;
+        }
+
+        .lp-negative {
+            color: #f87171;
+        }
+
+        .lp-zero {
+            color: #9ca3af;
+        }
+
+        .lp-total {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        input[type="number"] {
+            width: 80px;
+            padding: 0.3rem;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 4px;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            background: #7c3aed;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background: #6d28d9;
+        }
+
+        .btn-remove {
+            padding: 0.4rem 0.8rem;
+            background: rgba(239, 68, 68, 0.5);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-remove:hover {
+            background: rgba(239, 68, 68, 0.7);
+        }
+
+        .instructions {
+            margin-top: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .instructions h3 {
+            margin-bottom: 1rem;
+        }
+
+        .instructions ul {
+            list-style: none;
+            color: #bfdbfe;
+        }
+
+        .instructions li {
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>👑 Torneo LoL - Temporada Nueva 👑</h1>
+            <p>Mayor cantidad de LP netos acumulados en 4 semanas</p>
+        </div>
+
+        <!-- Info Cards -->
+        <div class="info-cards">
+            <div class="info-card">
+                <div class="info-card-title">🏆 Premio</div>
+                <div class="info-card-value">Skin Épica</div>
+            </div>
+            <div class="info-card">
+                <div class="info-card-title">📅 Duración</div>
+                <div class="info-card-value">4 Semanas</div>
+            </div>
+            <div class="info-card">
+                <div class="info-card-title">🎯 Partidas/Semana</div>
+                <div class="info-card-value">15 Solo/Duo Q</div>
+            </div>
+        </div>
+
+        <!-- Leader Card -->
+        <div class="leader-card" id="leaderCard">
+            <div class="leader-info">
+                <div class="leader-trophy">🏆</div>
+                <div>
+                    <div style="color: #fcd34d; font-size: 0.9rem; font-weight: 600;">LÍDER ACTUAL</div>
+                    <div class="leader-name" id="leaderName">-</div>
+                    <div style="color: #bfdbfe;" id="leaderRank">-</div>
+                </div>
+            </div>
+            <div class="leader-total">
+                <div class="leader-total-label">LP TOTALES</div>
+                <div class="leader-total-value" id="leaderTotal">0</div>
+            </div>
+        </div>
+
+        <!-- Players Table -->
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Pos</th>
+                        <th>Jugador</th>
+                        <th>Rango Inicial</th>
+                        <th class="center">LP Inicial</th>
+                        <th class="center">Sem. 1</th>
+                        <th class="center">Sem. 2</th>
+                        <th class="center">Sem. 3</th>
+                        <th class="center">Sem. 4</th>
+                        <th class="center">LP TOTAL</th>
+                        <th class="center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="playersTable">
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Add Player Button -->
+        <button class="btn" onclick="addPlayer()">➕ Agregar Jugador</button>
+
+        <!-- Instructions -->
+        <div class="instructions">
+            <h3>📋 Instrucciones</h3>
+            <ul>
+                <li>• Haz clic en cualquier casilla de LP semanal para editarla</li>
+                <li>• Ingresa valores positivos para ganancias y negativos para pérdidas (ej: +25 o -18)</li>
+                <li>• El LP total se calcula automáticamente</li>
+                <li>• Los jugadores se ordenan automáticamente por LP total</li>
+                <li>• Todos los datos se guardan automáticamente</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        let players = [];
+        let editingCell = null;
+
+        // Cargar datos al inicio
+        async function loadData() {
+            try {
+                const result = await window.storage.get('lol-tournament-data');
+                if (result?.value) {
+                    players = JSON.parse(result.value);
+                } else {
+                    // Datos iniciales
+                    players = [
+                        { id: 1, name: 'Ale', initialRank: 'Platino IV', initialLP: 0, weeks: [0, 0, 0, 0] },
+                        { id: 2, name: 'Joako', initialRank: 'Esmeralda II', initialLP: 50, weeks: [0, 0, 0, 0] },
+                        { id: 3, name: 'Participante 3', initialRank: 'Plata III', initialLP: 20, weeks: [0, 0, 0, 0] }
+                    ];
+                    await saveData();
+                }
+            } catch (error) {
+                console.log('Inicializando datos:', error);
+                players = [
+                    { id: 1, name: 'Ale', initialRank: 'Platino IV', initialLP: 0, weeks: [0, 0, 0, 0] },
+                    { id: 2, name: 'Joako', initialRank: 'Esmeralda II', initialLP: 50, weeks: [0, 0, 0, 0] },
+                    { id: 3, name: 'Participante 3', initialRank: 'Plata III', initialLP: 20, weeks: [0, 0, 0, 0] }
+                ];
+            }
+            render();
+        }
+
+        async function saveData() {
+            try {
+                await window.storage.set('lol-tournament-data', JSON.stringify(players));
+            } catch (error) {
+                console.error('Error guardando datos:', error);
+            }
+        }
+
+        function calculateTotal(player) {
+            return player.weeks.reduce((sum, lp) => sum + lp, 0);
+        }
+
+        function getTrendIcon(lp) {
+            if (lp > 0) return '📈';
+            if (lp < 0) return '📉';
+            return '➖';
+        }
+
+        function getLPClass(lp) {
+            if (lp > 0) return 'lp-positive';
+            if (lp < 0) return 'lp-negative';
+            return 'lp-zero';
+        }
+
+        function render() {
+            const sortedPlayers = [...players].sort((a, b) => calculateTotal(b) - calculateTotal(a));
+            
+            // Actualizar líder
+            if (sortedPlayers.length > 0) {
+                const leader = sortedPlayers[0];
+                document.getElementById('leaderName').textContent = leader.name;
+                document.getElementById('leaderRank').textContent = leader.initialRank;
+                const leaderTotal = calculateTotal(leader);
+                document.getElementById('leaderTotal').textContent = (leaderTotal > 0 ? '+' : '') + leaderTotal;
+            }
+
+            // Actualizar tabla
+            const tbody = document.getElementById('playersTable');
+            tbody.innerHTML = '';
+
+            sortedPlayers.forEach((player, index) => {
+                const total = calculateTotal(player);
+                const row = document.createElement('tr');
+                
+                let html = `
+                    <td>
+                        <div class="position">
+                            ${index === 0 ? '🏆' : ''}
+                            <strong>${index + 1}</strong>
+                        </div>
+                    </td>
+                    <td><strong>${player.name}</strong></td>
+                    <td style="color: #bfdbfe;">${player.initialRank}</td>
+                    <td class="center" style="color: #d1d5db;">${player.initialLP}</td>
+                `;
+
+                player.weeks.forEach((lp, weekIndex) => {
+                    html += `
+                        <td class="center">
+                            <span class="lp-cell ${getLPClass(lp)}" onclick="editCell(${player.id}, ${weekIndex})">
+                                ${getTrendIcon(lp)}
+                                <strong>${lp > 0 ? '+' : ''}${lp}</strong>
+                            </span>
+                        </td>
+                    `;
+                });
+
+                html += `
+                    <td class="center">
+                        <span class="lp-total ${getLPClass(total)}">
+                            ${total > 0 ? '+' : ''}${total}
+                        </span>
+                    </td>
+                    <td class="center">
+                        <button class="btn-remove" onclick="removePlayer(${player.id})">Eliminar</button>
+                    </td>
+                `;
+
+                row.innerHTML = html;
+                tbody.appendChild(row);
+            });
+        }
+
+        function editCell(playerId, weekIndex) {
+            const player = players.find(p => p.id === playerId);
+            if (!player) return;
+
+            const currentValue = player.weeks[weekIndex];
+            const newValue = prompt(`Ingresa LP para Semana ${weekIndex + 1}:`, currentValue);
+            
+            if (newValue !== null) {
+                const numValue = parseInt(newValue) || 0;
+                player.weeks[weekIndex] = numValue;
+                saveData();
+                render();
+            }
+        }
+
+        async function editCell(playerId, weekIndex) {
+            const player = players.find(p => p.id === playerId);
+            if (!player) return;
+
+            const currentValue = player.weeks[weekIndex];
+            const newValue = prompt(`Ingresa LP para Semana ${weekIndex + 1}:`, currentValue);
+            
+            if (newValue !== null) {
+                const numValue = parseInt(newValue) || 0;
+                player.weeks[weekIndex] = numValue;
+                await saveData();
+                render();
+            }
+        }
+        async function addPlayer() {
+            const name = prompt('Nombre del jugador:');
+            if (!name) return;
+            
+            const rank = prompt('Rango inicial (ej: Oro III):');
+            if (!rank) return;
+            
+            const lp = parseInt(prompt('LP inicial:') || '0');
+            
+            const newPlayer = {
+                id: Date.now(),
+                name,
+                initialRank: rank,
+                initialLP: lp,
+                weeks: [0, 0, 0, 0]
+            };
+            
+            players.push(newPlayer);
+            await saveData();
+            render();
+        }
+
+        async function removePlayer(playerId) {
+            if (confirm('¿Eliminar este jugador?')) {
+                players = players.filter(p => p.id !== playerId);
+                await saveData();
+                render();
+            }
+        }
+
+        // Inicializar
+        loadData();
+    </script>
+</body>
+</html>
